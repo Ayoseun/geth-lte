@@ -2,20 +2,21 @@ package gethlte
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/ayoseun/geth-lte/internals"
 	"github.com/ayoseun/geth-lte/types"
 )
 
 
 
-//help
-func GetBalance(rpc string,walletAddress string) {
+
+func GetBalance(rpc string,walletAddress string)([]byte, error) {
 //"https://bsc.meowrpc.com"
 	walletBalance, err := internals.GetBalance(rpc, walletAddress)
+
+
 	if err != nil {
-		fmt.Println("Error:", err)
-		return
+		// Return an error if there's a problem fetching the balance
+		return nil, err
 	}
 
 	response := types.WalletBalanceResponse{
@@ -26,12 +27,15 @@ func GetBalance(rpc string,walletAddress string) {
 	// Marshal the response to JSON
 	responseJSON, err := json.Marshal(response)
 	if err != nil {
-		fmt.Println("Error:", err)
-		return
+		// Return an error if there's a problem fetching the balance
+		return nil, err
 	}
 
-	fmt.Println(string(responseJSON))
+	
 
+
+	// Return the JSON-encoded response as a []byte
+	return responseJSON, nil
 
 }
 
