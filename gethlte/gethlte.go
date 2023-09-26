@@ -36,3 +36,5 @@ func GetBalance(rpc string,walletAddress string) {
 }
 
 
+
+
