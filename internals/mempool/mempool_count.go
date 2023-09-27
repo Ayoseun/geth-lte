@@ -1,22 +1,21 @@
-package address
+package mempool
 
 import (
 	"encoding/json"
-	//"fmt"
-
+	 "github.com/ayoseun/geth-lte/common"
 	"github.com/ayoseun/geth-lte/rpc_calls"
 	"github.com/ayoseun/geth-lte/types" // Import the JSONRPC package
 )
 
-func GetTransactionByHash(rpc string, hash string) (types.TransactionResponse, error) {
+func TxMemPoolCount(rpc string) (types.MemPoolCount, error) {
     // Define the URL you want to send a POST request to
     url := rpc
 
     // Create a JSON-RPC request struct
     request := types.JSONRPCRequest{
         JSONRPC: "2.0",
-        Method:  "eth_getTransactionByHash",
-        Params:  []interface{}{hash},
+        Method:  "txpool_status",
+        Params:  []interface{}{},
         ID:      123,
     }
 
@@ -28,15 +27,20 @@ func GetTransactionByHash(rpc string, hash string) (types.TransactionResponse, e
     if err != nil {
 	
     }
-	//fmt.Printf("Ether balance: %s\n",response)
+
     // Define a struct to represent the JSON response
-    var parsedResponse types.TransactionResponse
+    var parsedResponse types.MemPoolCount
+
+
 
     // Parse the JSON response into the struct
     err = json.Unmarshal([]byte(response), &parsedResponse)
     if err != nil {
      
     }
+   // Format the "Pending" and "Queued" values
+   parsedResponse.Result.Pending,err = hexutil.FormatHex(parsedResponse.Result.Pending)
+   parsedResponse.Result.Queued,err = hexutil.FormatHex(parsedResponse.Result.Queued)
 
 
     return parsedResponse, nil

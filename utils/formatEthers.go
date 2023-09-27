@@ -31,10 +31,6 @@ func FormatEther(hex string,precision ...int)(string, error) {
 
 
 func ParseEther(big string,precision ...int)(string, error) {
-
-
-
-
 	// Default precision to 8 if not provided
 	if len(precision) == 0 {
 		precision = append(precision, 18)

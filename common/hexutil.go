@@ -284,3 +284,13 @@ func MultiplyDecimal(denominatorStr string, precision int) (string, error) {
 
     return resultStr, nil
 }
+
+
+func FormatHex(hex string)(string, error) {
+
+	result, err := DecodeBig(hex)
+	if err != nil {
+		return "", err
+	}
+	return result.String(), nil
+}
