@@ -1,4 +1,4 @@
-package internals
+package block
 
 import (
 	"encoding/json"
@@ -7,7 +7,7 @@ import (
 	"github.com/ayoseun/geth-lte/types" // Import the JSONRPC package
 )
 
-func GetBalance(rpc string, address string) (string, error) {
+func GetBlockTXCountByHash(rpc string, hash string) (string, error) {
 	//"https://bsc.meowrpc.com"
 	// Define the URL you want to send a POST request to
 	url := rpc
@@ -15,8 +15,8 @@ func GetBalance(rpc string, address string) (string, error) {
 	// Create a JSON-RPC request struct
 	request := types.JSONRPCRequest{
 		JSONRPC: "2.0",
-		Method:  "eth_getBalance",
-		Params:  []interface{}{address, "latest"},
+		Method:  "eth_getBlockTransactionCountByHash",
+		Params:  []interface{}{hash},
 		ID:      123,
 	}
 
@@ -24,7 +24,7 @@ func GetBalance(rpc string, address string) (string, error) {
 	contentType := "application/json"
 
 	// Send the JSON-RPC request and handle the response
-	response, err := rpc_calls.GetBalanceRequest(url, request, contentType)
+	response, err := rpc_calls.HttpRequest(url, request, contentType)
 	if err != nil {
 		return "", err
 	}
@@ -52,13 +52,10 @@ func GetBalance(rpc string, address string) (string, error) {
 		return "", err
 	}
 
-	denominatorStr := "1000000000000000000"
+
 	// precision := 2
 	resultStr := result.String()
-	result6, err := hexutil.DivideLargeNumbers(resultStr, denominatorStr)
-	if err != nil {
-		return "", err
-	}
 
-	return result6, nil
+
+	return resultStr, nil
 }

@@ -240,7 +240,7 @@ func mapError(err error) error {
 	return err
 }
 
-func DivideLargeNumbers(numeratorStr, denominatorStr string, precision ...int) (string, error) {
+func DivideLargeNumbers(numeratorStr, denominatorStr string, precision int) (string, error) {
 	// Create big.Int instances representing the numerator and denominator
 	num := new(big.Int)
 	denom := new(big.Int)
@@ -253,17 +253,34 @@ func DivideLargeNumbers(numeratorStr, denominatorStr string, precision ...int) (
 		return "", fmt.Errorf("invalid denominator: %s", denominatorStr)
 	}
 
-	// Default precision to 8 if not provided
-	if len(precision) == 0 {
-		precision = append(precision, 18)
-	}
+
 
 	// Perform the division
-	var ans big.Float
-	ans.Quo(new(big.Float).SetInt(num), new(big.Float).SetInt(denom))
+	var result big.Float
+	result.Quo(new(big.Float).SetInt(num), new(big.Float).SetInt(denom))
 
 	// Convert the result to a string with the specified precision
-	resultStr := ans.Text('f', precision[0])
+	resultStr := result.Text('f', precision)
 
 	return resultStr, nil
+}
+
+
+func MultiplyDecimal(denominatorStr string, precision int) (string, error) {
+    // Convert the input string to a big.Float
+    denominator, _, err := new(big.Float).Parse(denominatorStr, 10)
+    if err != nil {
+        return "", err
+    }
+
+    // Create a big.Float representing 10 raised to the power of the precision
+    tenToThePower := new(big.Float).SetInt(new(big.Int).Exp(big.NewInt(10), big.NewInt(int64(precision)), nil))
+
+    // Multiply the denominator by 10^precision
+    result := new(big.Float).Mul(denominator, tenToThePower)
+
+    // Convert the result to a string with the specified precision
+    resultStr := result.Text('f', precision)
+
+    return resultStr, nil
 }

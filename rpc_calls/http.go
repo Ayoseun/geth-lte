@@ -11,7 +11,7 @@ import (
 
 // GetBalanceRequest sends a JSON-RPC request to the specified URL
 // with the given JSON request and content type, and returns the response body or an error.
-func GetBalanceRequest(url string, request types.JSONRPCRequest, contentType string) ([]byte, error) {
+func HttpRequest(url string, request types.JSONRPCRequest, contentType string) ([]byte, error) {
 	// Serialize the JSON-RPC request
 	requestBody, err := json.Marshal(request)
 	if err != nil {
