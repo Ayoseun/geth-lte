@@ -1,13 +1,13 @@
-package address
+package block_core
 
 import (
 	"encoding/json"
-	"github.com/ayoseun/geth-lte/common"
+	"github.com/ayoseun/geth-lte/common/hexutil"
 	"github.com/ayoseun/geth-lte/rpc_calls"
 	"github.com/ayoseun/geth-lte/types" // Import the JSONRPC package
 )
 
-func GetAddressBalance(rpc string, address string) (string, error) {
+func GetBlockTXCountByHash(rpc string, hash string) (string, error) {
 	//"https://bsc.meowrpc.com"
 	// Define the URL you want to send a POST request to
 	url := rpc
@@ -15,8 +15,8 @@ func GetAddressBalance(rpc string, address string) (string, error) {
 	// Create a JSON-RPC request struct
 	request := types.JSONRPCRequest{
 		JSONRPC: "2.0",
-		Method:  "eth_getBalance",
-		Params:  []interface{}{address, "latest"},
+		Method:  "eth_getBlockTransactionCountByHash",
+		Params:  []interface{}{hash},
 		ID:      123,
 	}
 
@@ -52,14 +52,10 @@ func GetAddressBalance(rpc string, address string) (string, error) {
 		return "", err
 	}
 
-	denominatorStr := "1000000000000000000"
+
 	// precision := 2
 	resultStr := result.String()
-	//setting the precision to 18 is not compulsory, buut it defaults to 18 
-	ethbalance, err := hexutil.DivideLargeNumbers(resultStr, denominatorStr,18)
-	if err != nil {
-		return "", err
-	}
 
-	return ethbalance, nil
+
+	return resultStr, nil
 }

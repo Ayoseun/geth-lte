@@ -2,7 +2,7 @@ package internals
 
 import (
 	"encoding/json"
-	"github.com/ayoseun/geth-lte/common"
+	"github.com/ayoseun/geth-lte/common/hexutil"
 	"github.com/ayoseun/geth-lte/rpc_calls"
 	"github.com/ayoseun/geth-lte/types" // Import the JSONRPC package
 )

@@ -1,9 +1,11 @@
 package utils
 
 import (
+	"fmt"
+	"math/big"
+	"strings"
 
-
-	hexutil "github.com/ayoseun/geth-lte/common"
+	hexutil "github.com/ayoseun/geth-lte/common/hexutil"
 )
 
 
@@ -42,4 +44,35 @@ func ParseEther(big string,precision ...int)(string, error) {
 	}
 
 	return etherStr, nil
+}
+
+func HexToDecimal(hexStr string) (*big.Int, error) {
+	// Remove the "0x" prefix if present
+	hexStr = strings.TrimPrefix(hexStr, "0x")
+
+	// Convert hex string to a big.Int
+	decimalValue := new(big.Int)
+	decimalValue, success := decimalValue.SetString(hexStr, 16)
+	if !success {
+		return nil, fmt.Errorf("Invalid hexadecimal string: %s", hexStr)
+	}
+
+	return decimalValue, nil
+}
+func HexToString(hexStr string,precision ...int) (string, error) {
+	// Remove the "0x" prefix if present
+    decimalValue, err := HexToDecimal(hexStr)
+    if err !=nil {
+		return "", fmt.Errorf("Invalid hexadecimal string: %s", hexStr)
+	}
+    denominatorStr := "1000000000000000000"
+		// Default precision to 8 if not provided
+		if len(precision) == 0 {
+			precision = append(precision, 18)
+		}
+    result,err:= hexutil.DivideLargeNumbers( decimalValue.String(),denominatorStr,precision[0])
+
+    
+
+	return result, nil
 }

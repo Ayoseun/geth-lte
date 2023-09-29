@@ -1,4 +1,4 @@
-package mempool
+package mempool_core
 
 import (
 	"encoding/json"

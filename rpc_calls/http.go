@@ -3,7 +3,7 @@ package rpc_calls
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
+	
 	"io/ioutil"
 	"net/http"
 	"github.com/ayoseun/geth-lte/types"
@@ -25,10 +25,7 @@ func HttpRequest(url string, request types.JSONRPCRequest, contentType string) (
 	}
 	defer response.Body.Close()
 
-	// Check the response status code
-	if response.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("Request failed with status code: %d", response.StatusCode)
-	}
+
 
 	// Read the response body
 	responseBody, err := ioutil.ReadAll(response.Body)

@@ -1,6 +1,6 @@
-package types
+package results
 
-type WalletBalanceResponse struct {
+type AddressContractBalanceResponse struct {
 	Balance string `json:"balance"`
 	Address string `json:"address"`
 }

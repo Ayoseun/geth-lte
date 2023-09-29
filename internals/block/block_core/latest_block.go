@@ -1,26 +1,26 @@
-package address
+package block_core
 
 import (
 	"encoding/json"
 	
 
-	"github.com/ayoseun/geth-lte/common"
+	"github.com/ayoseun/geth-lte/common/hexutil"
 	"github.com/ayoseun/geth-lte/rpc_calls"
 	"github.com/ayoseun/geth-lte/types" // Import the JSONRPC package
 )
 
-func GetAddressTXCount(rpc string, address string) (string, error) {
+func LastBlock(rpc string) (string, error) {
 	//"https://bsc.meowrpc.com"
 	// Define the URL you want to send a POST request to
 	url := rpc
 
-	// Create a JSON-RPC request struct
-	request := types.JSONRPCRequest{
-		JSONRPC: "2.0",
-		Method:  "eth_getTransactionCount",
-		Params:  []interface{}{address, "latest"},
-		ID:      123,
-	}
+// Create a JSON-RPC request struct with an empty array for Params
+request := types.JSONRPCRequest{
+    JSONRPC: "2.0",
+    Method:  "eth_blockNumber",
+    Params:  []interface{}{},
+    ID:      123,
+}
 
 	// Specify the content type for the request
 	contentType := "application/json"
@@ -54,9 +54,6 @@ func GetAddressTXCount(rpc string, address string) (string, error) {
 		return "", err
 	}
 
-
-	resultStr := result.String()
-
-
-	return resultStr, nil
+	
+	return result.String(), nil
 }
