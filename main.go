@@ -1,4 +1,4 @@
-package mempool
+package main
 
 import (
 	"fmt"
@@ -12,15 +12,7 @@ import (
 //0x2c9387ec7a7c84c
 
 func main() {
-	// Define the RPC string
-	rpc := "https://rpc.ankr.com/polygon"
-
-
-	result, err := contract.BalanceOf(rpc,"0xbe991e317fbb4e82f7f99c62096f36b7a24278de","0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063")
-	if err != nil {
-		panic(err)
-	}
-	fmt.Printf("Pool: %s\n", result)
+	ViewTxMemPool()
 	
 }
 

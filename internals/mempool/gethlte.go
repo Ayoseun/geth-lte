@@ -64,7 +64,6 @@ func TransactionsMemPoolCount(rpc string) ([]byte, error) {
 }
 
 func RTLTransactionsMempool(wssURL string, ch chan string) {
-
 	// Connect to the WebSocket server
 	u, err := url.Parse(wssURL)
 	if err != nil {
@@ -101,7 +100,29 @@ func RTLTransactionsMempool(wssURL string, ch chan string) {
 			break
 		}
 
-		ch <- string(message)
+	// Create an EthSubscriptionData object
+	var ethData EthSubscriptionData
+
+	// Unmarshal the message into the EthSubscriptionData struct
+	if err := json.Unmarshal(message, &ethData); err != nil {
+		log.Println("Error unmarshaling message:", err)
+		continue
+	}
+
+	// Marshal the EthSubscriptionData struct back to JSON
+	ethDataJSON, err := json.Marshal(ethData.Params.Result)
+	if err != nil {
+		log.Println("Error marshaling EthSubscriptionData:", err)
+		continue
+	}
+
+	// Send the JSON data to the channel as []byte
+	ch <- string(ethDataJSON)
+		// You can now access the data using ethSubscription
+		// For example, you can access the blockHash as ethSubscription.params.result.blockHash
+
+		// Send the JSON data to the channel
+		//ch <- string(message)
 	}
 
 	// Handle Ctrl+C to gracefully close the WebSocket connection
@@ -109,5 +130,33 @@ func RTLTransactionsMempool(wssURL string, ch chan string) {
 	signal.Notify(interrupt, os.Interrupt)
 	<-interrupt
 	fmt.Println("Closing WebSocket connection...")
+}
 
+type EthSubscriptionResult struct {
+	BlockHash        *string `json:"blockHash"`
+	BlockNumber      *string `json:"blockNumber"`
+	From             string  `json:"from"`
+	Gas              string  `json:"gas"`
+	GasPrice         string  `json:"gasPrice"`
+	Hash             string  `json:"hash"`
+	Input            string  `json:"input"`
+	Nonce            string  `json:"nonce"`
+	To               string  `json:"to"`
+	TransactionIndex *string `json:"transactionIndex"`
+	Value            string  `json:"value"`
+	Type             string  `json:"type"`
+	V                string  `json:"v"`
+	R                string  `json:"r"`
+	S                string  `json:"s"`
+}
+
+type EthSubscriptionParams struct {
+	Result EthSubscriptionResult `json:"result"`
+}
+
+type EthSubscriptionData struct {
+	JSONRPC     string              `json:"jsonrpc"`
+	Method      string              `json:"method"`
+	Params      EthSubscriptionParams `json:"params"`
+	Subscription string              `json:"subscription"`
 }
