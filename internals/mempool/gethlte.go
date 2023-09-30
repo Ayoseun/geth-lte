@@ -7,8 +7,10 @@ import (
 	"net/url"
 	"os"
 	"os/signal"
+
 	"github.com/ayoseun/geth-lte/internals/mempool/mempool_core"
 	"github.com/ayoseun/geth-lte/types"
+	"github.com/ayoseun/geth-lte/types/results"
 	"github.com/gorilla/websocket"
 )
 
@@ -101,16 +103,16 @@ func RTLTransactionsMempool(wssURL string, ch chan string) {
 		}
 
 	// Create an EthSubscriptionData object
-	var ethData EthSubscriptionData
+	var poolData results.MempoolData
 
 	// Unmarshal the message into the EthSubscriptionData struct
-	if err := json.Unmarshal(message, &ethData); err != nil {
+	if err := json.Unmarshal(message, &poolData); err != nil {
 		log.Println("Error unmarshaling message:", err)
 		continue
 	}
 
 	// Marshal the EthSubscriptionData struct back to JSON
-	ethDataJSON, err := json.Marshal(ethData.Params.Result)
+	ethDataJSON, err := json.Marshal(poolData.Params.Result)
 	if err != nil {
 		log.Println("Error marshaling EthSubscriptionData:", err)
 		continue
@@ -132,31 +134,3 @@ func RTLTransactionsMempool(wssURL string, ch chan string) {
 	fmt.Println("Closing WebSocket connection...")
 }
 
-type EthSubscriptionResult struct {
-	BlockHash        *string `json:"blockHash"`
-	BlockNumber      *string `json:"blockNumber"`
-	From             string  `json:"from"`
-	Gas              string  `json:"gas"`
-	GasPrice         string  `json:"gasPrice"`
-	Hash             string  `json:"hash"`
-	Input            string  `json:"input"`
-	Nonce            string  `json:"nonce"`
-	To               string  `json:"to"`
-	TransactionIndex *string `json:"transactionIndex"`
-	Value            string  `json:"value"`
-	Type             string  `json:"type"`
-	V                string  `json:"v"`
-	R                string  `json:"r"`
-	S                string  `json:"s"`
-}
-
-type EthSubscriptionParams struct {
-	Result EthSubscriptionResult `json:"result"`
-}
-
-type EthSubscriptionData struct {
-	JSONRPC     string              `json:"jsonrpc"`
-	Method      string              `json:"method"`
-	Params      EthSubscriptionParams `json:"params"`
-	Subscription string              `json:"subscription"`
-}
