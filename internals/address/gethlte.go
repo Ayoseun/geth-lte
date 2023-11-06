@@ -3,11 +3,14 @@ package address
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"log"
 	"math/big"
 
+	"github.com/ayoseun/geth-lte/common/hexutil"
 	"github.com/ayoseun/geth-lte/internals"
 	"github.com/ayoseun/geth-lte/internals/address/address_core"
+	"github.com/ayoseun/geth-lte/internals/block/block_core"
 	"github.com/ayoseun/geth-lte/types"
 	"github.com/ayoseun/geth-lte/types/results"
 	"github.com/ethereum/go-ethereum/ethclient"
@@ -87,6 +90,34 @@ func GetTransactionByHash(rpc string, hash string) ([]byte, error) {
 	// Return the JSON-encoded response as a []byte
 
 	return responseJSON, nil
+}
+
+// GetTransactionByHash retrieves a transaction by its hash using the provided RPC URL.
+func GetTransactionConfirmations(rpc string, hash string) (*big.Int, error) {
+	tx, err := address_core.GetTransactionByHash(rpc, hash)
+	if err != nil {
+		return nil, err
+	}
+
+	blckNum, err := hexutil.DecodeBig(tx.Result.BlockNumber)
+	if err != nil {
+		return nil, err
+	}
+
+	block, err := block_core.LastBlock(rpc)
+	if err != nil {
+		return nil, err
+	}
+
+	blockBigInt := new(big.Int)
+	_, ok := blockBigInt.SetString(block, 10)
+	if !ok {
+		return nil, fmt.Errorf("failed to convert block number to big.Int")
+	}
+
+	height := new(big.Int).Sub(blockBigInt, blckNum)
+
+	return height, nil
 }
 
 // GetTransactionByHash retrieves a transaction by its hash using the provided RPC URL.

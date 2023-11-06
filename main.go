@@ -12,7 +12,8 @@ import (
 //0x2c9387ec7a7c84c
 
 func main() {
-	GetTransactionByHash()
+	
+	GetTransactionConfirmation()
 	
 }
 
@@ -78,6 +79,16 @@ func GetTransactionByHash() {
 		panic(err)
 	}
 	fmt.Printf("Ether balance: %s\n", result)
+}
+
+// Get Transaction hash
+func GetTransactionConfirmation() {
+	result, err := address.GetTransactionConfirmations("https://polygon-mumbai.g.alchemy.com/v2/A7mvet09ATzDQmzbzQ8RNcn8X9lpTUR2", "0xc4ccc58ccd34ccc1e8d081cc3996a761341865235d6e3a0ff728e8d6e650633e")
+
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("tx Confirmation: %s\n", result)
 }
 
 // Get block transaction count
