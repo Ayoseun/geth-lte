@@ -12,7 +12,7 @@ import (
 //0x2c9387ec7a7c84c
 
 func main() {
-	ViewTxMemPool()
+	GetTransactionByHash()
 	
 }
 
@@ -30,6 +30,17 @@ func userContractBalance() {
 }
 
 
+func sendCoin() {
+	// Define the RPC string
+	rpc := "https://polygon-mumbai.g.alchemy.com/v2/A7mvet09ATzDQmzbzQ8RNcn8X9lpTUR2"
+	privateKey:="cb5b800d6310735b8cfd2abc2681cd00ab4b20e4348fd4c1a4b4454df9512172"
+	receipent:="0x06A4F23936b585b0ffFb23b6c8c53D89Bca8321A"
+
+   
+	 address.Transfer(rpc,privateKey,receipent,0.056)
+
+	
+}
 
 //Read MemPool Realtime
 func ViewTxMemPool() {
@@ -62,7 +73,7 @@ func BlockByHash() {
 
 // Get Transaction hash
 func GetTransactionByHash() {
-	result, err := address.GetTransactionByHash("https://bsc.meowrpc.com", "0x8b2c166606569b4a4ed68a764a370f1dbc5a61e8d7a2ea4d1812cc7f9c487ee1")
+	result, err := address.GetTransactionByHash("https://polygon-mumbai.g.alchemy.com/v2/A7mvet09ATzDQmzbzQ8RNcn8X9lpTUR2", "0xc4ccc58ccd34ccc1e8d081cc3996a761341865235d6e3a0ff728e8d6e650633e")
 	if err != nil {
 		panic(err)
 	}

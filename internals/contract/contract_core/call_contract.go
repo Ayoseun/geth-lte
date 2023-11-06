@@ -10,20 +10,19 @@ import (
 	"github.com/ayoseun/geth-lte/utils"
 )
 
-func BalanceOf(rpc string,msg types.ParamObject) (types.JSONRPCResult, error) {
+func BalanceOf(rpc string, msg types.ParamObject) (types.JSONRPCResult, error) {
 	// Define the URL you want to send a POST request to
 	url := rpc
-fmt.Println(msg)
+	fmt.Println(msg)
 
 	// Create a JSON-RPC request struct
 	request := types.JSONRPCRequest{
 		JSONRPC: "2.0",
 		Method:  "eth_call",
-		Params: helper.ToCallArg(msg),
-		
+		Params:  helper.ToCallArg(msg),
 
-	ID: 123,
-}
+		ID: 123,
+	}
 
 	// Specify the content type for the request
 	contentType := "application/json"
@@ -44,7 +43,6 @@ fmt.Println(msg)
 	}
 
 	parsedResponse.Result, err = utils.HexToString(parsedResponse.Result)
-
 
 	return parsedResponse, nil
 }

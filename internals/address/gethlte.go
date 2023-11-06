@@ -1,12 +1,16 @@
 package address
 
 import (
+	"context"
 	"encoding/json"
+	"log"
+	"math/big"
 
 	"github.com/ayoseun/geth-lte/internals"
 	"github.com/ayoseun/geth-lte/internals/address/address_core"
 	"github.com/ayoseun/geth-lte/types"
 	"github.com/ayoseun/geth-lte/types/results"
+	"github.com/ethereum/go-ethereum/ethclient"
 )
 
 func GetBalance(rpc string, walletAddress string) ([]byte, error) {
@@ -71,13 +75,9 @@ func GetTransactionByHash(rpc string, hash string) ([]byte, error) {
 
 	}
 
-	txData := types.TransactionResponse{
-		JSONRPC: tx.JSONRPC,
-		ID:      tx.ID,
-		Result:  tx.Result,
-	}
+
 	// Marshal the response to JSON
-	responseJSON, err := json.Marshal(txData)
+	responseJSON, err := json.Marshal(tx.Result)
 	if err != nil {
 
 		// Return an error if there's a problem fetching the balance
@@ -115,4 +115,18 @@ func GetTransactionReceiptByHash(rpc string, hash string) ([]byte, error) {
 	// Return the JSON-encoded response as a []byte
 
 	return responseJSON, nil
+}
+func Transfer(rpc string, privateKey string,recipient string,amount float64, optionalGasPrice ...*big.Int){
+	client, err := ethclient.Dial(rpc)
+	var gasPrice *big.Int
+	if len(optionalGasPrice) > 0 {
+		gasPrice = optionalGasPrice[0]
+	} else {
+		gasPrice, err = client.SuggestGasPrice(context.Background())
+		if err != nil {
+			log.Fatalf("Failed to suggest gas price: %v", err)
+		}
+	}
+	address_core.SendTx(rpc,privateKey,recipient,amount,gasPrice)
+
 }
