@@ -93,7 +93,7 @@ func GetTransactionByHash(rpc string, hash string) ([]byte, error) {
 }
 
 // GetTransactionByHash retrieves a transaction by its hash using the provided RPC URL.
-func GetTransactionConfirmations(rpc string, hash string) (*big.Int, error) {
+func GetTransactionConfirmations(rpc string, hash string) ([]byte, error) {
 	tx, err := address_core.GetTransactionByHash(rpc, hash)
 	if err != nil {
 		return nil, err
@@ -117,7 +117,18 @@ func GetTransactionConfirmations(rpc string, hash string) (*big.Int, error) {
 
 	height := new(big.Int).Sub(blockBigInt, blckNum)
 
-	return height, nil
+	confirmation := &types.TransactionConfirmation{
+		To:     tx.Result.To,
+		From:   tx.Result.From,
+		Confirmations: height.String(),
+	}
+	
+	confirmationJSON, err := json.Marshal(confirmation)
+	if err != nil {
+		return nil, err
+	}
+	
+	return confirmationJSON, nil
 }
 
 // GetTransactionByHash retrieves a transaction by its hash using the provided RPC URL.
