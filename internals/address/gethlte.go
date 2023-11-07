@@ -13,7 +13,9 @@ import (
 	"github.com/ayoseun/geth-lte/internals/block/block_core"
 	"github.com/ayoseun/geth-lte/types"
 	"github.com/ayoseun/geth-lte/types/results"
+	"github.com/ayoseun/geth-lte/utils"
 	"github.com/ethereum/go-ethereum/ethclient"
+
 )
 
 func GetBalance(rpc string, walletAddress string) ([]byte, error) {
@@ -116,11 +118,15 @@ func GetTransactionConfirmations(rpc string, hash string) ([]byte, error) {
 	}
 
 	height := new(big.Int).Sub(blockBigInt, blckNum)
+    value,err:= utils.HexToString(tx.Result.Value)
+	if err!=nil{
 
+	}
 	confirmation := &types.TransactionConfirmation{
 		To:     tx.Result.To,
 		From:   tx.Result.From,
 		Confirmations: height.String(),
+		Amount: value,
 	}
 	
 	confirmationJSON, err := json.Marshal(confirmation)

@@ -55,7 +55,7 @@ func GetAddressBalance(rpc string, address string) (string, error) {
 	denominatorStr := "1000000000000000000"
 	// precision := 2
 	resultStr := result.String()
-	//setting the precision to 18 is not compulsory, buut it defaults to 18 
+	//setting the precision to 18 is not compulsory, but it defaults to 18 
 	ethbalance, err := hexutil.DivideLargeNumbers(resultStr, denominatorStr,18)
 	if err != nil {
 		return "", err
